@@ -62,3 +62,7 @@ typeorm.io/#/repository-api 에서 확인해봐라
 
 뭐든지 항상 여러 가지 다양한 방법으로 수행할 수 있다. 라이브러리의 단점이기도함.abnf
 SQL 내부의 논리를 이해하면 뭘할지 파악할 수 있다.
+
+class-validator class-transformer 설치
+main의 파이프에 연결한
+white list -true는 허용된 이메일 과 패스워드만 존재하게함
