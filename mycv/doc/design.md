@@ -66,3 +66,7 @@ SQL 내부의 논리를 이해하면 뭘할지 파악할 수 있다.
 class-validator class-transformer 설치
 main의 파이프에 연결한
 white list -true는 허용된 이메일 과 패스워드만 존재하게함
+
+커맨스 쉬프트 p sqlite
+
+sqlite는 웹앱에 적합하지않음 나중에 postgres로 바꿀거라고함
