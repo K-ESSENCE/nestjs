@@ -9,3 +9,28 @@ Content-Type: application/json
     "password":"strdassing"
 
 }
+
+
+### Find user Id
+
+GET http://localhost:3000/auth/21
+
+
+### Find all user  with a given email
+
+GET http://localhost:3000/auth?email=ㅇㄴㅁ@nasdc.com
+
+
+### Delete a user with a given id
+
+DELETE http://localhost:3000/auth/1
+
+
+### Update a user With a given id
+
+PATCH http://localhost:3000/auth/2
+Content-Type: application/json
+
+{
+    "email":"zzz1zz@zzz.com"
+}
