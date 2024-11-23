@@ -7,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 //typeorm이 이해할수있게해줌
+// import { Exclude } from 'class-transformer';
+//직렬화 할때 제외하는 것
 
 @Entity()
 export class User {
