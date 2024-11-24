@@ -8,9 +8,9 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
-import { UserDto } from '../users/dtos/user.dto';
 
 export class SerializeInterceptor implements NestInterceptor {
+  constructor(private dto: new (...args: any[]) => {}) {}
   intercept(
     context: ExecutionContext,
     handler: CallHandler<any>,
@@ -21,7 +21,7 @@ export class SerializeInterceptor implements NestInterceptor {
     return handler.handle().pipe(
       map((data: any) => {
         // console.log('Im running before response is sent out', data);
-        return plainToClass(UserDto, data, {
+        return plainToClass(this.dto, data, {
           excludeExtraneousValues: true,
           // 예상대로동작하게하는 옵션 JSON으로 변환하려고할 때마다 Expose라고 표현된 것만 공유하거나 노출함
         });
