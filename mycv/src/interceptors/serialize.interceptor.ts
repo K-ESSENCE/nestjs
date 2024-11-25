@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 import { plainToClass } from 'class-transformer';
 
 export function Serialize(dto: new (...args: any[]) => {}) {
-  return UseInterceptors(new SerializeInterceptor(dto));
+  return UseInterceptors(new SerializeInterceptor(dto)); // 모든 클래스를 말함 클래스만 주면 만족
 }
 
 export class SerializeInterceptor implements NestInterceptor {
