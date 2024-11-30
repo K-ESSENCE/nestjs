@@ -22,6 +22,10 @@ Content-Type: application/json
 
 }
 
+### Get the currently signed in user
+
+GET http://localhost:3000/auth/whoami
+
 
 
 ### Find user Id
