@@ -34,12 +34,19 @@ export class UsersController {
   @Get('/whoami')
   whoAmI(@Session() session: any) {
     return this.userService.findOne(session.userId);
+    // 세션에 유저가 없으면 에러 발생 => 제일 첫번째 유저 걍 반환해버림
   }
 
   @Get('/colors')
   getColor(@Session() session: any) {
     return session.color;
   }
+
+  @Post('/signout')
+  signout(@Session() session: any) {
+    session.userId = null;
+  }
+
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto, @Session() session: any) {
     //내부 파일 보려면 DTO => DTO로 검증

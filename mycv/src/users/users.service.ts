@@ -17,6 +17,7 @@ export class UsersService {
     return this.repo.find({ where: { email } });
   }
   findOne(id: number) {
+    if (!id) throw new NotFoundException('user not found'); // 유저가 없으면 에러 발생
     return this.repo.findOneBy({ id });
   }
 
