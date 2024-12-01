@@ -9,6 +9,7 @@ import {
   Delete,
   NotFoundException,
   Session,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user';
 import { UsersService } from './users.service';
@@ -18,7 +19,7 @@ import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './user.entity';
-
+import { AuthGuard } from 'src/guards/auth.guard';
 @Controller('auth')
 @Serialize(UserDto)
 export class UsersController {
@@ -40,6 +41,7 @@ export class UsersController {
   // }
 
   @Get('/whoami')
+  @UseGuards(AuthGuard)
   whoAmI(@CurrentUser() user: User) {
     // 세션에 유저가 없으면 에러 발생 => 제일 첫번째 유저 걍 반환해버림
     return user;
