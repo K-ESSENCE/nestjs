@@ -2,7 +2,8 @@ import { Test } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { sign } from 'crypto';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -11,11 +12,23 @@ describe('AuthService', () => {
   beforeEach(async () => {
     // 가짜 서비스
 
+    const users: User[] = [];
+
     fakeUserService = {
       //이객체가 UsersService 타입이지만 일부만 구현된 객체
-      find: () => Promise.resolve([]),
-      create: (email: string, password: string) =>
-        Promise.resolve({ id: 1, email, password } as User),
+      find: (email: string) => {
+        const filteredUsers = users.filter((user) => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
+      create: (email: string, password: string) => {
+        const user = {
+          id: Math.floor(Math.random() * 9999),
+          email,
+          password,
+        } as User;
+        users.push(user);
+        return Promise.resolve(user);
+      },
     };
 
     const module = await Test.createTestingModule({
@@ -60,6 +73,29 @@ describe('AuthService', () => {
     await expect(service.signup(existingEmail, 'asdf')).rejects.toThrow(
       BadRequestException,
     );
+  });
+
+  it('사용하지않는 이메일로 로그인 시도', async () => {
+    await expect(service.signin('asdf@asdf.com', 'asdf')).rejects.toThrow(
+      NotFoundException,
+    );
+  });
+
+  it('invalid password', async () => {
+    fakeUserService.find = () =>
+      Promise.resolve([
+        { id: 1, email: 'asdf@asdf.com', password: 'asdf' } as User,
+      ]);
+
+    await expect(
+      service.signin('asdf@asdf.com', 'wrongpassword'),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it('correct password', async () => {
+    await service.signup('asdf@asdf.com', '123');
+    const user = await service.signin('asdf@asdf.com', '123');
+    expect(user).toBeDefined();
   });
 });
 
