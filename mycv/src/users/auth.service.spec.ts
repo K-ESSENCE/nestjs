@@ -2,14 +2,16 @@ import { Test } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
+import { BadRequestException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
+  let fakeUserService: Partial<UsersService>;
 
   beforeEach(async () => {
     // 가짜 서비스
 
-    const fakeUserService: Partial<UsersService> = {
+    fakeUserService = {
       //이객체가 UsersService 타입이지만 일부만 구현된 객체
       find: () => Promise.resolve([]),
       create: (email: string, password: string) =>
@@ -35,4 +37,30 @@ describe('AuthService', () => {
   it('can create an instance of auth service', async () => {
     expect(service).toBeDefined(); // 서비스가 정의되어있는지 확인
   });
+
+  it('creates a new user with a salted and hashed password', async () => {
+    const user = await service.signup('asdf@asdf.com', 'asdf');
+
+    expect(user.password).not.toEqual('asdf');
+    const [salt, hash] = user.password.split('.');
+    expect(salt).toBeDefined();
+    expect(hash).toBeDefined();
+  });
+
+  it('throws error 이미쓰고있는 이메일', async () => {
+    const existingEmail = 'asdf@asdf.com';
+
+    // 가입하려는 이메일과 동일한 이메일을 가진 사용자가 이미 존재
+    fakeUserService.find = () =>
+      Promise.resolve([
+        { id: 1, email: existingEmail, password: '1234' } as User,
+      ]);
+
+    // 동일한 이메일로 가입 시도
+    await expect(service.signup(existingEmail, 'asdf')).rejects.toThrow(
+      BadRequestException,
+    );
+  });
 });
+
+// 두 가지 테스트에서 find의 역할이 다름 어떻게 해결하는가?
