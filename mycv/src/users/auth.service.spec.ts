@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { UpdateUserDto } from './dtos/update-user-dto';
+import { Serialize } from '../interceptors/serialize.interceptor';
 
 describe('AuthService', () => {
   let service: AuthService;
