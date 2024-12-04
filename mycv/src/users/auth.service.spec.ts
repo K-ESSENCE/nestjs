@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { sign } from 'crypto';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -64,10 +63,12 @@ describe('AuthService', () => {
     const existingEmail = 'asdf@asdf.com';
 
     // 가입하려는 이메일과 동일한 이메일을 가진 사용자가 이미 존재
-    fakeUserService.find = () =>
-      Promise.resolve([
-        { id: 1, email: existingEmail, password: '1234' } as User,
-      ]);
+    // fakeUserService.find = () =>
+    //   Promise.resolve([
+    //     { id: 1, email: existingEmail, password: '1234' } as User,
+    //   ]);
+
+    await service.signup(existingEmail, 'asdf');
 
     // 동일한 이메일로 가입 시도
     await expect(service.signup(existingEmail, 'asdf')).rejects.toThrow(
@@ -82,11 +83,7 @@ describe('AuthService', () => {
   });
 
   it('invalid password', async () => {
-    fakeUserService.find = () =>
-      Promise.resolve([
-        { id: 1, email: 'asdf@asdf.com', password: 'asdf' } as User,
-      ]);
-
+    await service.signup('asdf@asdf.com', 'sdadsa');
     await expect(
       service.signin('asdf@asdf.com', 'wrongpassword'),
     ).rejects.toThrow(BadRequestException);
