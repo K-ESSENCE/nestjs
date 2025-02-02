@@ -12,3 +12,20 @@ Content-Type: application/json
     "lat":0,
     "price":500
 }
+
+
+### CHANGE APPROVAL
+PATCH http://localhost:3000/reports/3
+Content-Type: application/json
+
+{
+    "approved":true
+}
+
+### CHANGE APPROVAL
+PATCH http://localhost:3000/reports/3
+Content-Type: application/json
+
+{
+    "approved":false
+}
